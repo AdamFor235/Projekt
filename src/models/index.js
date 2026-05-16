@@ -1,0 +1,26 @@
+import User from "./User.js";
+import Expense from "./Expense.js";
+import Category from "./Category.js";
+
+User.hasMany(Expense, {
+  foreignKey: "userId",
+  onDelete: "CASCADE"
+});
+
+Expense.belongsTo(User, {
+  foreignKey: "userId"
+});
+
+Category.hasMany(Expense, {
+  foreignKey: "categoryId"
+});
+
+Expense.belongsTo(Category, {
+  foreignKey: "categoryId"
+});
+
+export {
+  User,
+  Expense,
+  Category
+};
