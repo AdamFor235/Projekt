@@ -4,7 +4,9 @@ export const getAllExpenses = async (req, res) => {
   try {
 
     const expenses = await Expense.findAll({
-      include: Category
+      include: {
+        model: Category
+      }
     });
 
     res.status(200).json(expenses);
@@ -20,7 +22,9 @@ export const getExpenseById = async (req, res) => {
   try {
 
     const expense = await Expense.findByPk(req.params.id, {
-      include: Category
+      include: {
+        model: Category
+      }
     });
 
     if (!expense) {
@@ -41,7 +45,14 @@ export const getExpenseById = async (req, res) => {
 export const createExpense = async (req, res) => {
   try {
 
-    const expense = await Expense.create(req.body);
+    const { amount, description, date, categoryId } = req.body;
+
+    const expense = await Expense.create({
+      amount,
+      description,
+      date,
+      categoryId
+    });
 
     res.status(201).json(expense);
 

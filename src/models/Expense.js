@@ -20,7 +20,11 @@ const Expense = sequelize.define("Expense", {
   date: {
     type: DataTypes.DATEONLY,
     allowNull: false
-  }
+  },
+  categoryId: {
+  type: DataTypes.INTEGER,
+  allowNull: true
+}
 });
 
 export default Expense;
