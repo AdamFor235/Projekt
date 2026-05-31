@@ -1,12 +1,15 @@
 import express from "express";
 import cors from "cors";
-import expenseRoutes from "./api/routes/expense.routes.js";
 
+import expenseRoutes from "./api/routes/expense.routes.js";
+import categoryRoutes from "./api/routes/category.routes.js";
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 app.use("/expenses", expenseRoutes);
+app.use("/categories", categoryRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "App działa" });

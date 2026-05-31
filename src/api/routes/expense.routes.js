@@ -5,10 +5,16 @@ import {
   getExpenseById,
   createExpense,
   updateExpense,
-  deleteExpense
+  deleteExpense,
+  getExpensesSuma,
+  getExpensesCategorySuma
 } from "../akcje/expense.akcje.js";
 
 const router = express.Router();
+
+router.get("/summary", getExpensesSuma);
+
+router.get("/summary/categories", getExpensesCategorySuma);
 
 router.get("/", getAllExpenses);
 
@@ -19,5 +25,6 @@ router.post("/", createExpense);
 router.put("/:id", updateExpense);
 
 router.delete("/:id", deleteExpense);
+
 
 export default router;

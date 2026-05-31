@@ -1,10 +1,40 @@
 import { Expense, Category } from "../../models/index.js";
+import { Op } from "sequelize";
 
 export const getAllExpenses = async (req, res) => {
   try {
 
+    const { categoryId, min, max, sort } = req.query;
+
+    const where = {};
+    
+
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
+
+    if (min) {
+      where.amount = {
+        ...where.amount,
+        [Op.gte]: Number(min)
+      };
+    }
+
+    if (max) {
+      where.amount = {
+        ...where.amount,
+        [Op.lte]: Number(max)
+      };
+    }
+
     const expenses = await Expense.findAll({
-      include: Category
+      where,
+      include: {
+        model: Category
+      },
+      order: [
+        ["amount", sort === "ASC" ? "ASC" : "DESC"]
+      ]
     });
 
     res.status(200).json(expenses);
@@ -20,7 +50,9 @@ export const getExpenseById = async (req, res) => {
   try {
 
     const expense = await Expense.findByPk(req.params.id, {
-      include: Category
+      include: {
+        model: Category
+      }
     });
 
     if (!expense) {
@@ -40,8 +72,49 @@ export const getExpenseById = async (req, res) => {
 
 export const createExpense = async (req, res) => {
   try {
+    const { amount, description, date, categoryId } = req.body;
 
-    const expense = await Expense.create(req.body);
+    // Walidacja
+    if (amount === undefined || amount === null) {
+      return res.status(400).json({
+        message: "Amount jest wymagany"
+      });
+    }
+
+    if (!date) {
+      return res.status(400).json({
+        message: "Data jest wymagana"
+      });
+    }
+
+    if (isNaN(amount) || Number(amount) <= 0) {
+      return res.status(400).json({
+        message: "Amount musi być pozytywny"
+      });
+    }
+
+    if (description && description.length > 255) {
+      return res.status(400).json({
+        message: "opis nie większy niż 255"
+      });
+    }
+
+    if (categoryId) {
+      const category = await Category.findByPk(categoryId);
+
+      if (!category) {
+        return res.status(400).json({
+          message: "kategoria nie istnieje"
+        });
+      }
+    }
+
+    const expense = await Expense.create({
+      amount,
+      description,
+      date,
+      categoryId
+    });
 
     res.status(201).json(expense);
 
@@ -52,9 +125,9 @@ export const createExpense = async (req, res) => {
   }
 };
 
+
 export const updateExpense = async (req, res) => {
   try {
-
     const expense = await Expense.findByPk(req.params.id);
 
     if (!expense) {
@@ -63,7 +136,38 @@ export const updateExpense = async (req, res) => {
       });
     }
 
-    await expense.update(req.body);
+    const { amount, description, date, categoryId } = req.body;
+
+    if (amount !== undefined) {
+      if (isNaN(amount) || Number(amount) <= 0) {
+        return res.status(400).json({
+          message: "Amount musi być pozytywny"
+        });
+      }
+    }
+
+    if (description !== undefined && description.length > 255) {
+      return res.status(400).json({
+        message: "opis nie większy niż 255"
+      });
+    }
+
+    if (categoryId !== undefined && categoryId !== null) {
+      const category = await Category.findByPk(categoryId);
+
+      if (!category) {
+        return res.status(400).json({
+          message: "kategoria nie istnieje"
+        });
+      }
+    }
+
+    await expense.update({
+      amount,
+      description,
+      date,
+      categoryId
+    });
 
     res.status(200).json(expense);
 
@@ -90,6 +194,52 @@ export const deleteExpense = async (req, res) => {
     res.status(200).json({
       message: "Expense deleted"
     });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+export const getExpensesSuma = async (req, res) => {
+  try {
+    const expenses = await Expense.findAll();
+
+    const total = expenses.reduce((sum, exp) => {
+      return sum + Number(exp.amount);
+    }, 0);
+
+    res.status(200).json({
+      total
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+export const getExpensesCategorySuma = async (req, res) => {
+  try {
+    const expenses = await Expense.findAll({
+      include: Category
+    });
+
+    const summary = {};
+
+    expenses.forEach(exp => {
+      const category = exp.Category?.name || "Uncategorized";
+
+      if (!summary[category]) {
+        summary[category] = 0;
+      }
+
+      summary[category] += Number(exp.amount);
+    });
+
+    res.status(200).json(summary);
 
   } catch (error) {
     res.status(500).json({
