@@ -201,3 +201,49 @@ export const deleteExpense = async (req, res) => {
     });
   }
 };
+
+export const getExpensesSuma = async (req, res) => {
+  try {
+    const expenses = await Expense.findAll();
+
+    const total = expenses.reduce((sum, exp) => {
+      return sum + Number(exp.amount);
+    }, 0);
+
+    res.status(200).json({
+      total
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+export const getExpensesCategorySuma = async (req, res) => {
+  try {
+    const expenses = await Expense.findAll({
+      include: Category
+    });
+
+    const summary = {};
+
+    expenses.forEach(exp => {
+      const category = exp.Category?.name || "Uncategorized";
+
+      if (!summary[category]) {
+        summary[category] = 0;
+      }
+
+      summary[category] += Number(exp.amount);
+    });
+
+    res.status(200).json(summary);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
