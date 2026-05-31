@@ -1,12 +1,40 @@
 import { Expense, Category } from "../../models/index.js";
+import { Op } from "sequelize";
 
 export const getAllExpenses = async (req, res) => {
   try {
 
+    const { categoryId, min, max, sort } = req.query;
+
+    const where = {};
+    
+
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
+
+    if (min) {
+      where.amount = {
+        ...where.amount,
+        [Op.gte]: Number(min)
+      };
+    }
+
+    if (max) {
+      where.amount = {
+        ...where.amount,
+        [Op.lte]: Number(max)
+      };
+    }
+
     const expenses = await Expense.findAll({
+      where,
       include: {
         model: Category
-      }
+      },
+      order: [
+        ["amount", sort === "ASC" ? "ASC" : "DESC"]
+      ]
     });
 
     res.status(200).json(expenses);
