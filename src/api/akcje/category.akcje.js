@@ -16,8 +16,39 @@ export const getAllCategories = async (req, res) => {
 
 export const createCategory = async (req, res) => {
   try {
+    const { name } = req.body;
 
-    const category = await Category.create(req.body);
+    if (!name) {
+      return res.status(400).json({
+        message: "Category name jest wymagane"
+      });
+    }
+
+    if (name.trim().length < 2) {
+      return res.status(400).json({
+        message: "Category name musi mieć 2 znaki"
+      });
+    }
+
+    if (name.length > 50) {
+      return res.status(400).json({
+        message: "Category name nie większe od 50"
+      });
+    }
+
+    const existingCategory = await Category.findOne({
+      where: { name }
+    });
+
+    if (existingCategory) {
+      return res.status(400).json({
+        message: "Category istnieje"
+      });
+    }
+
+    const category = await Category.create({
+      name
+    });
 
     res.status(201).json(category);
 
@@ -28,9 +59,9 @@ export const createCategory = async (req, res) => {
   }
 };
 
+
 export const updateCategory = async (req, res) => {
   try {
-
     const category = await Category.findByPk(req.params.id);
 
     if (!category) {
@@ -39,7 +70,42 @@ export const updateCategory = async (req, res) => {
       });
     }
 
-    await category.update(req.body);
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({
+        message: "Category name jest wymagane"
+      });
+    }
+
+    if (name.trim().length < 2) {
+      return res.status(400).json({
+        message: "Category name musi mieć 2 znaki"
+      });
+    }
+
+    if (name.length > 50) {
+      return res.status(400).json({
+        message: "Category name nie większe od 50"
+      });
+    }
+
+    const existingCategory = await Category.findOne({
+      where: { name }
+    });
+
+    if (
+      existingCategory &&
+      existingCategory.id !== category.id
+    ) {
+      return res.status(400).json({
+        message: "Category istnieje"
+      });
+    }
+
+    await category.update({
+      name
+    });
 
     res.status(200).json(category);
 

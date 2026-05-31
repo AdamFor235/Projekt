@@ -44,8 +44,42 @@ export const getExpenseById = async (req, res) => {
 
 export const createExpense = async (req, res) => {
   try {
-
     const { amount, description, date, categoryId } = req.body;
+
+    // Walidacja
+    if (amount === undefined || amount === null) {
+      return res.status(400).json({
+        message: "Amount jest wymagany"
+      });
+    }
+
+    if (!date) {
+      return res.status(400).json({
+        message: "Data jest wymagana"
+      });
+    }
+
+    if (isNaN(amount) || Number(amount) <= 0) {
+      return res.status(400).json({
+        message: "Amount musi być pozytywny"
+      });
+    }
+
+    if (description && description.length > 255) {
+      return res.status(400).json({
+        message: "opis nie większy niż 255"
+      });
+    }
+
+    if (categoryId) {
+      const category = await Category.findByPk(categoryId);
+
+      if (!category) {
+        return res.status(400).json({
+          message: "kategoria nie istnieje"
+        });
+      }
+    }
 
     const expense = await Expense.create({
       amount,
@@ -63,9 +97,9 @@ export const createExpense = async (req, res) => {
   }
 };
 
+
 export const updateExpense = async (req, res) => {
   try {
-
     const expense = await Expense.findByPk(req.params.id);
 
     if (!expense) {
@@ -74,7 +108,38 @@ export const updateExpense = async (req, res) => {
       });
     }
 
-    await expense.update(req.body);
+    const { amount, description, date, categoryId } = req.body;
+
+    if (amount !== undefined) {
+      if (isNaN(amount) || Number(amount) <= 0) {
+        return res.status(400).json({
+          message: "Amount musi być pozytywny"
+        });
+      }
+    }
+
+    if (description !== undefined && description.length > 255) {
+      return res.status(400).json({
+        message: "opis nie większy niż 255"
+      });
+    }
+
+    if (categoryId !== undefined && categoryId !== null) {
+      const category = await Category.findByPk(categoryId);
+
+      if (!category) {
+        return res.status(400).json({
+          message: "kategoria nie istnieje"
+        });
+      }
+    }
+
+    await expense.update({
+      amount,
+      description,
+      date,
+      categoryId
+    });
 
     res.status(200).json(expense);
 
