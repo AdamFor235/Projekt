@@ -7,14 +7,17 @@ import {
   updateExpense,
   deleteExpense,
   getExpensesSuma,
-  getExpensesCategorySuma
+  getExpensesCategorySuma,
+  getMonthlyExpenses
 } from "../akcje/expense.akcje.js";
 
 const router = express.Router();
 
-router.get("/summary", getExpensesSuma);
+router.get("/monthly", getMonthlyExpenses);
 
-router.get("/summary/categories", getExpensesCategorySuma);
+router.get("/suma", getExpensesSuma);
+
+router.get("/suma/category", getExpensesCategorySuma);
 
 router.get("/", getAllExpenses);
 
