@@ -4,14 +4,14 @@ import sequelize from "../src/config/database.js";
 
 describe("Expenses API", () => {
 
-  it("GET /expenses should return array", async () => {
+  it("GET /expenses Zwrócić tablice", async () => {
     const res = await request(app).get("/expenses");
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
 
-  it("POST /expenses should create expense", async () => {
+  it("POST /expenses Stworzył expense", async () => {
 
     const category = await request(app)
     .post("/categories")
@@ -31,7 +31,7 @@ describe("Expenses API", () => {
     expect(res.body).toHaveProperty("id");
   });
 
-  it("DELETE /expenses/:id should remove expense", async () => {
+  it("DELETE /expenses/:id Usunoł expnese", async () => {
     const category = await request(app)
     .post("/categories")
     .send({ name: "TestCat" });

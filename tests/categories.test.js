@@ -18,8 +18,17 @@ describe("Categories API", () => {
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("id");
   });
-
+  it("Odrzucił niewłaściwą expense", async () => {
+  const res = await request(app)
+    .post("/expenses")
+    .send({
+      amount: -100,
+      date: "invalid",
+      categoryId: 9999
+    });
   
+    expect(res.statusCode).toBe(400);
+  });
 
 });
 
