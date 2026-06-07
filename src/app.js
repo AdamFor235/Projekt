@@ -22,4 +22,15 @@ app.get("/", (req, res) => {
   res.json({ message: "App działa" });
 });
 
+app.use((err, req, res, next) => {
+  console.error("FULL ERROR:");
+  console.error(err);
+  console.error(err?.stack);
+
+  res.status(500).json({
+    message: err.message,
+    stack: err.stack
+  });
+});
+
 export default app;

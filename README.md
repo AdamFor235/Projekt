@@ -13,7 +13,7 @@ Prosty backend do zarządzania wydatkami użytkownika.
 - Lista wydatków
 - Edycja wydatków
 - Usuwanie wydatków
-- Kategorie
+- Kategorie zmiana
 
 ## Instalacja
 
