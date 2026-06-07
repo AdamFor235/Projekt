@@ -1,16 +1,32 @@
+version: "3.9"
+
 services:
-  mysql:
-    image: mysql:8
-
+  db:
+    image: mysql:8.0
+    container_name: expenses-db
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: expense_db
-
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: expenses
     ports:
       - "3306:3306"
-
     volumes:
-      - mysql_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: expenses-app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: expenses
+      DB_PORT: 3306
 
 volumes:
-  mysql_data:
+  db_data:
