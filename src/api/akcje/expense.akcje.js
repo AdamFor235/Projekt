@@ -1,5 +1,5 @@
 import { Expense, Category } from "../../models/index.js";
-import { Op } from "sequelize";
+import { Op, fn, col } from "sequelize";
 
 export const getAllExpenses = async (req, res) => {
   try {
@@ -240,6 +240,27 @@ export const getExpensesCategorySuma = async (req, res) => {
     });
 
     res.status(200).json(summary);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+export const getMonthlyExpenses = async (req, res) => {
+  try {
+
+    const monthly = await Expense.findAll({
+      attributes: [
+        [fn("DATE_FORMAT", col("date"), "%Y-%m"), "month"],
+        [fn("SUM", col("amount")), "total"]
+      ],
+      group: [fn("DATE_FORMAT", col("date"), "%Y-%m")],
+      order: [[fn("DATE_FORMAT", col("date"), "%Y-%m"), "ASC"]]
+    });
+
+    res.status(200).json(monthly);
 
   } catch (error) {
     res.status(500).json({

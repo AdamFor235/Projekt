@@ -1,6 +1,7 @@
 import User from "./User.js";
 import Expense from "./Expense.js";
 import Category from "./Category.js";
+import Budget from "./Budget.js";
 
 User.hasMany(Expense, {
   foreignKey: "userId",
@@ -22,5 +23,6 @@ Expense.belongsTo(Category, {
 export {
   User,
   Expense,
-  Category
+  Category,
+  Budget
 };
