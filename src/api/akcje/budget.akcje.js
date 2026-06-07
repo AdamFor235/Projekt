@@ -1,5 +1,5 @@
 import { Expense, Budget } from "../../models/index.js";
-import { fn, col, where } from "sequelize";
+import { fn, col, Op } from "sequelize";
 import axios from "axios";
 
 export const createBudget = async (req, res) => {
@@ -30,23 +30,30 @@ export const getBudgets = async (req, res) => {
 export const getBudgetStatus = async (req, res) => {
   try {
     const { month } = req.params;
+
     const budget = await Budget.findOne({
       where: { month }
     });
+
     if (!budget) {
       return res.status(404).json({
         message: "Budget not found"
       });
     }
-    
+
     const spentResult = await Expense.findOne({
       attributes: [[fn("SUM", col("amount")), "spent"]],
-      where: where(fn("DATE_FORMAT", col("date"), "%Y-%m"), month)
+      where: {
+        date: {
+          [Op.like]: `${month}%`
+        }
+      }
     });
 
     const spent = Number(spentResult?.dataValues?.spent || 0);
     const limit = Number(budget.limit);
     const remaining = limit - spent;
+
     const [eurRes, usdRes] = await Promise.all([
       axios.get("https://api.nbp.pl/api/exchangerates/rates/A/EUR/?format=json"),
       axios.get("https://api.nbp.pl/api/exchangerates/rates/A/USD/?format=json")
@@ -55,7 +62,7 @@ export const getBudgetStatus = async (req, res) => {
     const eurRate = eurRes.data.rates[0].mid;
     const usdRate = usdRes.data.rates[0].mid;
 
-    const response = {
+    return res.json({
       month,
       pln: {
         budgetLimit: limit,
@@ -73,13 +80,11 @@ export const getBudgetStatus = async (req, res) => {
         spent: +(spent / usdRate).toFixed(2),
         remaining: +(remaining / usdRate).toFixed(2)
       }
-    };
+    });
 
-    res.json(response);
   } catch (error) {
     res.status(500).json({
       message: error.message
     });
   }
 };
-
