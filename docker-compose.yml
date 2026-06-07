@@ -22,13 +22,15 @@ services:
     build: .
     command: npm test
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DB_HOST: db
       DB_USER: root
       DB_PASSWORD: root
       DB_NAME: expenses_db
       DB_PORT: 3306
+      NODE_ENV: test
 
   app:
     build: .
