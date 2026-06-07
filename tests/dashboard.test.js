@@ -1,9 +1,14 @@
 import request from "supertest";
 import app from "../src/app.js";
 import sequelize from "../src/config/database.js";
+import initDb from "./setup.js";
 
 describe("Dashboard", () => {
 
+  beforeAll(async () => {
+      await initDb();
+  });
+  
   it("GET /dashboard/:month", async () => {
     const res = await request(app)
       .get("/dashboard/2026-06");

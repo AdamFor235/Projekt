@@ -1,9 +1,14 @@
 import request from "supertest";
 import app from "../src/app.js";
 import sequelize from "../src/config/database.js";
+import initDb from "./setup.js";
 
 describe("Categories API", () => {
 
+  beforeAll(async () => {
+      await initDb();
+  });
+  
   it("GET /categories", async () => {
     const res = await request(app).get("/categories");
 

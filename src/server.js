@@ -14,7 +14,7 @@ const waitForDb = async (retries = 10) => {
       console.log("db połączone");
       return;
     } catch (err) {
-      console.log(`DB not ready... retry ${i + 1}/${retries}`);
+      console.log(`DB not ready, retry ${i + 1}/${retries}`);
       await new Promise(r => setTimeout(r, 2000));
     }
   }

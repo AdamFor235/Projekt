@@ -1,9 +1,6 @@
 import express from "express";
 import cors from "cors";
 
-
-
-
 import expenseRoutes from "./api/routes/expense.routes.js";
 import exchangeRoutes from "./api/routes/exchange.routes.js";
 import categoryRoutes from "./api/routes/category.routes.js";
@@ -26,7 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error("🔥 FULL ERROR:");
+  console.error("FULL ERROR:");
   console.error(err);
   console.error(err?.stack);
 
