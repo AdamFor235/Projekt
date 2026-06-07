@@ -7,11 +7,28 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: expenses
+      MYSQL_DATABASE: expenses_db
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  test:
+    build: .
+    command: npm test
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: expenses_db
+      DB_PORT: 3306
 
   app:
     build: .
@@ -20,12 +37,13 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DB_HOST: db
       DB_USER: root
       DB_PASSWORD: root
-      DB_NAME: expenses
+      DB_NAME: expenses_db
       DB_PORT: 3306
 
 volumes:
