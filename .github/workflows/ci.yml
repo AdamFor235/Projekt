@@ -10,6 +10,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: expenses_db
+      DB_USER: root
+      DB_PASSWORD: root
+      JWT_SECRET: testsecret
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,3 +36,11 @@ jobs:
 
       - name: Run tests
         run: docker compose run --rm test npm run coverage
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        run: echo "deploy app here"
