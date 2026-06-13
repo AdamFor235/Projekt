@@ -9,12 +9,12 @@ console.log({
   DB_PASSWORD_EXISTS: !!process.env.DB_PASSWORD
 });
 const sequelize = new Sequelize(
-  process.env.MYSQLDATABASE,
-  process.env.MYSQLUSER,
-  process.env.MYSQLPASSWORD,
+  process.env.DB_NAME || process.env.MYSQLDATABASE,
+  process.env.DB_USER || process.env.MYSQLUSER,
+  process.env.DB_PASSWORD || process.env.MYSQLPASSWORD,
   {
-    host: process.env.MYSQLHOST,
-    port: Number(process.env.MYSQLPORT),
+    host: process.env.DB_HOST || process.env.MYSQLHOST,
+    port: Number(process.env.DB_PORT || process.env.MYSQLPORT || 3306),
     dialect: "mysql",
     logging: false,
   }
