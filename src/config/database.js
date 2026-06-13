@@ -17,7 +17,16 @@ const sequelize = new Sequelize(
     port: Number(process.env.DB_PORT || process.env.MYSQLPORT || 3306),
     dialect: "mysql",
     logging: false,
+    dialectOptions: {
+      connectTimeout: 20000,
+    },
   }
 );
+console.log({
+  DB_HOST: process.env.DB_HOST,
+  MYSQLHOST: process.env.MYSQLHOST,
+  DB_NAME: process.env.DB_NAME,
+  MYSQLDATABASE: process.env.MYSQLDATABASE,
+});
 
 export default sequelize;
