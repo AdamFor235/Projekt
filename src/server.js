@@ -6,7 +6,13 @@ import "./models/index.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
-
+console.log({
+  DB_HOST: process.env.DB_HOST,
+  DB_PORT: process.env.DB_PORT,
+  DB_NAME: process.env.DB_NAME,
+  DB_USER: process.env.DB_USER,
+  DB_PASSWORD_EXISTS: !!process.env.DB_PASSWORD
+});
 const waitForDb = async (retries = 30) => {
   for (let i = 0; i < retries; i++) {
     try {
