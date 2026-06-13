@@ -22,6 +22,8 @@ app.get("/", (req, res) => {
   res.json({ message: "App działa" });
 });
 
+
+
 app.use((err, req, res, next) => {
   console.error("FULL ERROR:");
   console.error(err);

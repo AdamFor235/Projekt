@@ -10,20 +10,38 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: expenses_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+    env:
+      PORT: 3000
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_NAME: expenses_db
+      DB_USER: root
+      DB_PASSWORD: root
+      JWT_SECRET: testsecret
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
 
-      - name: Run lint
-        run: npm run lint
+      - run: npm run lint
 
-      - name: Run tests
-        run: docker compose run --rm test
+      - run: npm run coverage

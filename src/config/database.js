@@ -9,11 +9,11 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    port: Number(process.env.DB_PORT || 3306),
     dialect: "mysql",
     logging: false,
     dialectOptions: {
-      connectTimeout: 10000
+      connectTimeout: 20000
     }
   }
 );

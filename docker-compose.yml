@@ -20,7 +20,8 @@ services:
 
   test:
     build: .
-    command: npm test
+    working_dir: /app
+    command: npm run coverage
     depends_on:
       db:
         condition: service_healthy
@@ -31,11 +32,18 @@ services:
       DB_NAME: expenses_db
       DB_PORT: 3306
       NODE_ENV: test
+      JWT_SECRET: testsecret
+      
 
   app:
     build: .
     container_name: expenses-app
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
       - "3000:3000"
     depends_on:

@@ -4,6 +4,19 @@ import axios from "axios";
 
 export const createBudget = async (req, res) => {
   try {
+    const { month, limit } = req.body;
+
+  if (!month || !limit) {
+    return res.status(400).json({
+      message: "Month i limit są wymagane"
+    });
+  }
+
+if (Number(limit) <= 0) {
+  return res.status(400).json({
+    message: "Limit musi być > 0"
+  });
+}
 
     const budget = await Budget.create(req.body);
 
@@ -45,7 +58,10 @@ export const getBudgetStatus = async (req, res) => {
       attributes: [[fn("SUM", col("amount")), "spent"]],
       where: {
         date: {
-          [Op.like]: `${month}%`
+          [Op.between]: [
+            `${month}-01`,
+            `${month}-31`
+          ]
         }
       }
     });
