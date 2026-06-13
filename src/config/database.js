@@ -8,6 +8,12 @@ console.log({
   DB_NAME: process.env.DB_NAME,
   DB_PASSWORD_EXISTS: !!process.env.DB_PASSWORD
 });
+console.log({
+  DB_HOST: process.env.DB_HOST,
+  MYSQLHOST: process.env.MYSQLHOST,
+  DB_NAME: process.env.DB_NAME,
+  MYSQLDATABASE: process.env.MYSQLDATABASE,
+});
 const sequelize = new Sequelize(
   process.env.DB_NAME || process.env.MYSQLDATABASE,
   process.env.DB_USER || process.env.MYSQLUSER,
@@ -22,11 +28,6 @@ const sequelize = new Sequelize(
     },
   }
 );
-console.log({
-  DB_HOST: process.env.DB_HOST,
-  MYSQLHOST: process.env.MYSQLHOST,
-  DB_NAME: process.env.DB_NAME,
-  MYSQLDATABASE: process.env.MYSQLDATABASE,
-});
+
 
 export default sequelize;
