@@ -12,12 +12,12 @@ jobs:
 
     env:
       PORT: 3000
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_NAME: expenses_db
-      DB_USER: root
-      DB_PASSWORD: root
-      JWT_SECRET: testsecret
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
       - name: Checkout code
