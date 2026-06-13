@@ -19,7 +19,8 @@ Prosty backend do zarządzania wydatkami użytkownika.
 
 ## Uruchomienie
 
-docker compose up
+npm start
+(docker compose up)
 
 ## Testy
 
@@ -30,6 +31,17 @@ npm test
 
 # Database Schema
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#000000",
+    "primaryBorderColor": "#3b82f6",
+    "lineColor": "#60a5fa",
+    "secondaryColor": "#ffffff",
+    "tertiaryColor": "#ffffff"
+  }
+}}%%
 erDiagram
 
 CATEGORY ||--o{ EXPENSE : contains
@@ -57,3 +69,6 @@ BUDGET {
 ```
 ## API
 https://github.com/AdamFor235/Projekt/blob/main/API.md
+
+## Railway link 
+https://twoj-backend-production.up.railway.app:8080/
