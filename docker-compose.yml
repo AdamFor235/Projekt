@@ -19,13 +19,6 @@ services:
       retries: 20
 
   test:
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
     build: .
     working_dir: /app
     volumes:
@@ -34,6 +27,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: expenses_db
+      DB_PORT: 3306
+      NODE_ENV: test
+      JWT_SECRET: testsecret
 
       
 
