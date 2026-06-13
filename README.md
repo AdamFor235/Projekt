@@ -17,5 +17,43 @@ Prosty backend do zarządzania wydatkami użytkownika.
 
 ## Instalacja
 
-```bash
-npm install
+## Uruchomienie
+
+docker compose up
+
+## Testy
+
+npm test
+
+## Architektura
+
+
+# Database Schema
+```mermaid
+erDiagram
+
+CATEGORY ||--o{ EXPENSE : contains
+
+CATEGORY {
+    int id
+    string name
+}
+
+EXPENSE {
+    int id
+    float amount
+    string description
+    date date
+    int categoryId
+}
+
+BUDGET {
+    int id
+    string month
+    decimal limit
+    datetime created_at
+    datetime updated_at
+}
+```
+## API
+https://github.com/AdamFor235/Projekt/blob/main/API.md

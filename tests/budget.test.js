@@ -29,6 +29,30 @@ describe("Budget API", () => {
 
     expect(res.statusCode).toBe(404);
   });
+
+  it("zwraca 404 dla złego miesiąca", async () => {
+  const res = await request(app)
+    .get("/budgets/1999-01/status");
+
+  expect(res.statusCode).toBe(404);
+  });
+
+  it("odrzuca pusty request POST budget", async () => {
+  const res = await request(app)
+    .post("/budgets")
+    .send({});
+
+  expect([400, 404]).toContain(res.statusCode);
+  });
+
+  it("budget zły limit", async () => {
+  const res = await request(app)
+    .post("/budgets")
+    .send({ month: "2026-06", limit: -100 });
+
+  expect(res.statusCode).toBe(400);
+  });
+
 });
 
 afterAll(async () => {

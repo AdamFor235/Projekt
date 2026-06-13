@@ -1,5 +1,6 @@
 import { Expense, Category } from "../../models/index.js";
 import { Op, fn, col } from "sequelize";
+import moment from "moment";
 
 export const getAllExpenses = async (req, res) => {
   try {
@@ -108,6 +109,13 @@ export const createExpense = async (req, res) => {
         });
       }
     }
+
+    if (!moment(date, "YYYY-MM-DD", true).isValid()) {
+      return res.status(400).json({
+      message: "Invalid date format"
+      });
+    }
+    
 
     const expense = await Expense.create({
       amount,

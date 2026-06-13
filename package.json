@@ -8,7 +8,8 @@
         "dev": "nodemon src/server.js",
         "start": "node src/server.js",
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --runInBand"
     },
     "repository": {
         "type": "git",

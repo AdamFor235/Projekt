@@ -26,7 +26,7 @@ const Expense = sequelize.define("Expense", {
   },
   categoryId: {
   type: DataTypes.INTEGER,
-  allowNull: true
+  allowNull: false
 }
 });
 
