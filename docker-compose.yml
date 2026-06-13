@@ -21,8 +21,6 @@ services:
   test:
     build: .
     working_dir: /app
-    volumes:
-    - .:/app
     command: npm run coverage
     depends_on:
       db:
@@ -35,7 +33,6 @@ services:
       DB_PORT: 3306
       NODE_ENV: test
       JWT_SECRET: testsecret
-
       
 
   app:
