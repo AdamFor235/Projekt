@@ -48,17 +48,7 @@ npm test
 
 # Database Schema
 ```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "primaryColor": "#ffffff",
-    "primaryTextColor": "#000000",
-    "primaryBorderColor": "#3b82f6",
-    "lineColor": "#60a5fa",
-    "secondaryColor": "#ffffff",
-    "tertiaryColor": "#ffffff"
-  }
-}}%%
+%%{init: { "theme": "neutral" }}%%
 erDiagram
 
 CATEGORY ||--o{ EXPENSE : contains
@@ -88,4 +78,4 @@ BUDGET {
 https://github.com/AdamFor235/Projekt/blob/main/API.md
 
 ## Railway link 
-https://twoj-backend-production.up.railway.app:8080/
+https://projekt-production-c4f3.up.railway.app/
